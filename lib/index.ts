@@ -3,7 +3,7 @@ import jszip, { JSZipGeneratorOptions } from 'jszip';
 import { getExtension, getType } from 'mime';
 import ow from 'ow';
 import { Chapter, chapterDefaults, Content, Font, Image, NormChapter, NormOptions, Options, optionsDefaults, optionsPredicate, retryFetch, type, uuid, validateAndNormalizeChapters, validateAndNormalizeOptions } from './util';
-
+import fs from 'fs'
 
 export { Options, Content, Chapter, Font, optionsDefaults, chapterDefaults };
 
@@ -26,7 +26,7 @@ export class EPub {
         this.warn = console.warn.bind(console);
         break;
       case false:
-        this.log = this.warn = () => {};
+        this.log = this.warn = () => { };
         break;
       default:
         this.log = this.options.verbose.bind(null, 'log');
@@ -80,7 +80,7 @@ export class EPub {
   protected async generateTemplateFiles() {
     const oebps = this.zip.folder('OEBPS')!;
     oebps.file('style.css', this.options.css);
-    
+
     this.content.forEach(chapter => {
       const rendered = renderTemplate(this.options.chapterXHTML, {
         lang: this.options.lang,
@@ -152,8 +152,15 @@ export class EPub {
   protected async makeCover() {
     if (!this.cover) return this.log('No cover to download');
     const oebps = this.zip.folder('OEBPS')!;
-    const coverContent = await retryFetch(this.options.cover, this.options.fetchTimeout, this.options.retryTimes, this.log)
-      .catch(reason => (this.warn(`Warning (cover ${this.options.cover}): Download failed`, reason), ''));
+    let coverContent: Buffer | string = ""
+
+    if (this.options.cover.startsWith('http')) {
+      coverContent = await retryFetch(this.options.cover, this.options.fetchTimeout, this.options.retryTimes, this.log)
+        .catch(reason => (this.warn(`Warning (cover ${this.options.cover}): Download failed`, reason), ''));
+    } else {
+      coverContent = fs.readFileSync(this.options.cover)
+    }
+
     oebps.file(`cover.${this.cover.extension}`, coverContent);
   }
 }
