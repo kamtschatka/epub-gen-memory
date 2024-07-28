@@ -5,6 +5,8 @@ import { uuid } from './other';
 
 export type CB = typeof imgSrc;
 
+export type UrlValidator = (url: string) => boolean;
+
 export type Image = {
   url: string,
   id: string,
