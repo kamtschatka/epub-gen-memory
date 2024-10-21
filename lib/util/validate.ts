@@ -1,5 +1,6 @@
 import ow, { ObjectPredicate, Predicate } from 'ow';
 import { Merge } from 'type-fest';
+import { UrlValidator } from "./html";
 
 export type Chapter = {
   title?: string,
@@ -43,6 +44,7 @@ export type Options = {
   batchSize?: number,
   ignoreFailedDownloads?: boolean,
   verbose?: boolean | LogFn,
+  urlValidator?: UrlValidator,
 };
 
 const name = ow.optional.any(ow.string, ow.array.ofType(ow.string), ow.undefined);
