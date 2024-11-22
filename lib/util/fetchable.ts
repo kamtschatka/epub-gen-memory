@@ -1,4 +1,3 @@
-import AbortController from "abort-controller";
 import * as fs from 'fs/promises';
 import fetch from 'node-fetch';
 import { URL } from 'url';

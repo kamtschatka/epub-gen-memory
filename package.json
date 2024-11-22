@@ -1,6 +1,9 @@
 {
   "name": "@kamtschatka/epub-gen-memory",
   "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "A library to generate EPUB from HTML",
   "main": "dist/lib/index.js",
   "unpkg": "dist/bundle.min.js",
